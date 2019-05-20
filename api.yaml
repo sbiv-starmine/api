@@ -1,29 +1,34 @@
-openapi: "3.0.2"
+openapi: 3.0.2
 info:
-  version: 1.0.0
-  title: Swagger Petstore
-  license:
-    name: MIT
+  title: STARMINE API
+  version: 0.0.1
+  description: STARMINEで利用するAPIを記載する
 servers:
-  - url: http://petstore.swagger.io/v1
+  - url: 'http://localhost:8083/'
 paths:
-  /pets:
+  /images/{uuid}:
     get:
-      summary: List all pets
-      operationId: listPets
+      summary: 画像の一覧のURLを取得する
+      operationId: listImages
       tags:
-        - pets
+        - images
       parameters:
+        - name: uuid
+          in: path
+          description: 画像を取得するユーザのID
+          required: true
+          schema:
+            type: string
         - name: limit
           in: query
-          description: How many items to return at one time (max 100)
+          description: 1回で取得できる画像の枚数
           required: false
           schema:
             type: integer
             format: int32
       responses:
         '200':
-          description: A paged array of pets
+          description: 画像一覧の集合を返す
           headers:
             x-next:
               description: A link to the next page of responses
@@ -32,71 +37,119 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pets"
+                $ref: '#/components/schemas/Images'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-    post:
-      summary: Create a pet
-      operationId: createPets
-      tags:
-        - pets
-      responses:
-        '201':
-          description: Null response
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /pets/{petId}:
+                $ref: '#/components/schemas/Error'
+  '/images/{uuid}/category/{category}':
     get:
-      summary: Info for a specific pet
-      operationId: showPetById
+      summary: 画像の特定のカテゴリのURLを取得する
+      operationId: listImageByCategory
       tags:
-        - pets
+        - images
       parameters:
-        - name: petId
+        - name: uuid
           in: path
+          description: 画像を取得するユーザのID
           required: true
-          description: The id of the pet to retrieve
           schema:
             type: string
+        - name: category
+          in: path
+          description: 画像取得対象のカテゴリーの名前
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 1回で取得できる画像の枚数
+          required: false
+          schema:
+            type: integer
+            format: int32
       responses:
         '200':
           description: Expected response to a valid request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Pets"
+                $ref: '#/components/schemas/Images'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
+  '/images/{uuid}/tag/{tag}':
+    get:
+      summary: 画像の特定のタグのURLを取得する
+      operationId: listImageByTag
+      tags:
+        - images
+      parameters:
+        - name: uuid
+          in: path
+          description: 画像を取得するユーザのID
+          required: true
+          schema:
+            type: string
+        - name: tag
+          in: path
+          description: 画像取得対象のタグの名前
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: 1回で取得できる画像の枚数
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Images'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Pet:
+    Image:
       required:
-        - id
-        - name
+        - uuid
+        - url
+        - category
+        - tags
       properties:
-        id:
-          type: integer
-          format: int64
+        uuid:
+          type: string
         name:
           type: string
-        tag:
+        category:
           type: string
-    Pets:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+    Images:
       type: array
       items:
-        $ref: "#/components/schemas/Pet"
+        $ref: '#/components/schemas/Image'
+    Tag:
+      required: name
+      properties:
+        name:
+          type: string
     Error:
       required:
         - code
