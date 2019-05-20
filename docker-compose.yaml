@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "8081:8080"
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./api.yaml:/api.yaml
+    environment:
+      SWAGGER_JSON: /api.yaml
+
+  swagger-api:
+    image: danielgtaylor/apisprout
+    container_name: "swagger-api"
+    ports:
+      - "8083:8000"
+    volumes:
+      - ./api.yaml:/api.yaml
+    command: /api.yaml
