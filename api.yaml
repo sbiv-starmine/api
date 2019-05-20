@@ -8,7 +8,7 @@ servers:
 paths:
   /images/{uuid}:
     get:
-      summary: 画像の一覧のURLを取得する
+      summary: 画像URL一覧を取得する
       operationId: listImages
       tags:
         - images
@@ -46,7 +46,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   '/images/{uuid}/category/{category}':
     get:
-      summary: 画像の特定のカテゴリのURLを取得する
+      summary: 特定のカテゴリの画像URL一覧を取得する
       operationId: listImageByCategory
       tags:
         - images
@@ -85,7 +85,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   '/images/{uuid}/tag/{tag}':
     get:
-      summary: 画像の特定のタグのURLを取得する
+      summary: 特定のタグの画像URL一覧を取得する
       operationId: listImageByTag
       tags:
         - images
